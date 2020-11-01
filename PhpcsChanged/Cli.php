@@ -7,6 +7,7 @@ use PhpcsChanged\NoChangesException;
 use PhpcsChanged\Reporter;
 use PhpcsChanged\JsonReporter;
 use PhpcsChanged\FullReporter;
+use PhpcsChanged\EmacsReporter;
 use PhpcsChanged\PhpcsMessages;
 use PhpcsChanged\DiffLineMap;
 use PhpcsChanged\ShellOperator;
@@ -121,8 +122,8 @@ EOF;
 
 	printTwoColumns([
 		'--standard <STANDARD>' => 'The phpcs standard to use.',
-		'--report <REPORTER>' => 'The phpcs reporter to use. One of "full" (default) or "json".',
-		'-s' => 'Show sniff codes for each error when the reporter is "full".',
+		'--report <REPORTER>' => 'The phpcs reporter to use. One of "full" (default), "json", or "emacs".',
+		'-s' => 'Show sniff codes for each error when the reporter is "full" or "emacs".',
 		'--ignore <PATTERNS>' => 'A comma separated list of patterns to ignore files and directories.',
 		'--debug' => 'Enable debug output.',
 		'--help' => 'Print this help.',
@@ -145,6 +146,8 @@ function getReporter(string $reportType): Reporter {
 			return new FullReporter();
 		case 'json':
 			return new JsonReporter();
+		case 'emacs':
+			return new EmacsReporter();
 	}
 	printErrorAndExit("Unknown Reporter '{$reportType}'");
 }
@@ -381,6 +384,6 @@ function shouldIgnorePath(string $path, string $patternOption = null): bool {
 			return true;
 		}
 	}
-	
+
 	return false;
 }
